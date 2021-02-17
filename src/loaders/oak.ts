@@ -1,7 +1,7 @@
 import { bold, cyan, green } from "https://deno.land/std@0.73.0/fmt/colors.ts";
 import { Application, isHttpError } from "https://deno.land/x/oak/mod.ts";
-import { notFound } from "../helpers/notFound.ts";
-import router from "../routes/v1/index.ts";
+import router from "../api/routes/v1/index.ts";
+import { InternalError, NotFoundError } from "../helpers/api.response.ts";
 
 export default (): Application => {
   const app = new Application();
@@ -45,7 +45,8 @@ export default (): Application => {
         }
       } else {
         console.log(err);
-        throw err;
+        InternalError(context.response)
+        return
       }
     }
   });
@@ -55,7 +56,9 @@ export default (): Application => {
   app.use(router.allowedMethods());
 
   // A basic 404 page
-  app.use(notFound);
+  app.use((context) => {
+    NotFoundError(context.response)
+  })
 
   return app;
 };

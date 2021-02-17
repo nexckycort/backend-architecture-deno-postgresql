@@ -1,4 +1,3 @@
-import { Application } from "https://deno.land/x/oak/mod.ts";
 import {
   blue,
   green,
